@@ -1,0 +1,1 @@
+powershell -NoProfile -ExecutionPolicy RemoteSigned .\SiteCrawl.ps1 "http://~/index.htm"
