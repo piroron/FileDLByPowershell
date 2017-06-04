@@ -1,11 +1,11 @@
 ﻿#URL形式のチェック
-function IsCorrectUrl([string] $url){
+function IsAbsoluteUrl([string] $url){
     return [System.Uri]::IsWellFormedUriString($url, [System.UriKind]::Absolute);
 }
 
 $targetUrl = $Args[0];
 
-if (-not (IsCorrectUrl($targetUrl))) {
+if (-not (IsAbsoluteUrl($targetUrl))) {
     Write-Output "$targetUrl は正しい形式のURLではありません。"
     exit;
 }
@@ -46,9 +46,16 @@ try{
         #保存先パス作成（フォルダ + ファイル名）
         $outFilePath = Join-Path $savePath $fileName
 
-        #DL対象ファイルのURL取得（Uriの機能で、絶対パスと相対パスをくっつける）
-        $downloadUrl = New-Object System.Uri ($uri, $link)
-        
+        if (IsAbsoluteUrl($link)) {
+
+            #絶対パスの場合：そのまま利用する
+            $downloadUrl = New-Object System.Uri ($link)
+        } else {
+
+            #DL対象ファイルのURL取得（Uriの機能で、絶対パスと相対パスをくっつける）
+            $downloadUrl = New-Object System.Uri ($uri, $link)
+        }
+
         Invoke-WebRequest -Uri $downloadUrl.AbsoluteUri -OutFile　$outFilePath
         Write-Output "$fileName をダウンロードしました。"
     }
