@@ -5,6 +5,9 @@ function IsCorrectUrl([string] $url){
 
 $targetUrl = $Args[0];
 
+# SSL/TLSのエラーが発生する場合、以下のコメントアウトを解除して、再度実行してみてください。
+# [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 if (-not (IsCorrectUrl($targetUrl))) {
     Write-Output "$targetUrl は正しい形式のURLではありません。"
     exit;
